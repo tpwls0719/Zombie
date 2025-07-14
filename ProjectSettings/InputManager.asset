@@ -473,8 +473,8 @@ InputManager:
     m_Name: Reload
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: r
-    positiveButton: right
+    negativeButton: 
+    positiveButton: r
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1000
