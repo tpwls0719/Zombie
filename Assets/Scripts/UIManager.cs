@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour {
         {
             if (m_instance == null)
             {
-                m_instance = FindObjectOfType<UIManager>();
+                m_instance = FindFirstObjectByType<UIManager>();
             }
 
             return m_instance;
@@ -23,10 +23,18 @@ public class UIManager : MonoBehaviour {
     public Text ammoText; // 탄약 표시용 텍스트
     public Text scoreText; // 점수 표시용 텍스트
     public Text waveText; // 적 웨이브 표시용 텍스트
-    public GameObject gameoverUI; // 게임 오버시 활성화할 UI 
+    public GameObject gameoverUI; // 게임 오버시 활성화할 UI
+
+    public Text waveCenterText; // 화면 중앙에 띄울 웨이브 텍스트
+
+    private int previousWave = 0;
+
+    public Text zombieTimerText;
+    
 
     // 탄약 텍스트 갱신
-    public void UpdateAmmoText(int magAmmo, int remainAmmo) {
+    public void UpdateAmmoText(int magAmmo, int remainAmmo)
+    {
         ammoText.text = magAmmo + "/" + remainAmmo;
     }
 
@@ -36,12 +44,42 @@ public class UIManager : MonoBehaviour {
     }
 
     // 적 웨이브 텍스트 갱신
-    public void UpdateWaveText(int waves, int count) {
+    public void UpdateWaveText(int waves, int count)
+    {
         waveText.text = "Wave : " + waves + "\nEnemy Left : " + count;
+        // 웨이브 바뀔 때만 중앙에 출력
+        if (waves != previousWave)
+        {
+            UpdateWaveCenterText(waves);
+            previousWave = waves;
+        }
+        
     }
 
+    public void UpdateWaveCenterText(int wave)
+    {  
+        waveCenterText.gameObject.SetActive(true);
+        waveCenterText.text = "Wave : "+ wave.ToString();
+        StartCoroutine(HideWaveCenterText());
+        
+    }
+    
+    private System.Collections.IEnumerator HideWaveCenterText()
+    {
+        yield return new WaitForSeconds(0.8f);
+        waveCenterText.gameObject.SetActive(false);
+    }
+
+    public void UpdateZombieTimer(float timeLeft)
+    {
+        if (zombieTimerText != null)
+            zombieTimerText.text = "Time Left : " + timeLeft.ToString("F1") + "s";
+    }
+
+
     // 게임 오버 UI 활성화
-    public void SetActiveGameoverUI(bool active) {
+    public void SetActiveGameoverUI(bool active)
+    {
         gameoverUI.SetActive(active);
     }
 
